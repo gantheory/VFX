@@ -2,7 +2,7 @@
 % gsolve.m - Solve for imaging system response function
 %
 % Give a set of pixel values observed for several pixels in several
-% images with different exposure times, this fcuntion return the 
+% images with different exposure times, this function return the 
 % values for the observed pixels.
 %
 % Assumes:
