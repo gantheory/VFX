@@ -1,10 +1,11 @@
-hdr = hdrread( '../result.hdr' );
+hdr = hdrread( '../data/memorial/result.hdr' );
+imshow(hdr);
 tonemap_p( hdr);
 
 function rgb = tonemap_p( hdr )
     a = 0.7;
-    phi = 1;
-    epsilon = 0.0005;
+    phi = 8;
+    epsilon = 0.03;
     lum_w = 0.27 * hdr(:,:,1) + 0.67 * hdr(:,:,2) + 0.06 * hdr(:,:,3);
     image_size = size( hdr );
     height = image_size(1);
@@ -18,7 +19,6 @@ function rgb = tonemap_p( hdr )
         end
     end
     lum_white = max( lum_w(:) );
-    %lum_white = 1e20;
     lum_w_bar = double( exp (sum_all / N) );
     
     lum = a / lum_w_bar * lum_w;
@@ -31,45 +31,22 @@ function rgb = tonemap_p( hdr )
     hsv = rgb2hsv( hdr );
     hsv(:,:,3) = lum_d;
     rgb = hsv2rgb( hsv);
-    imshow(rgb)
-    imwrite(rgb, '../tonemapping1.png')
-    sum = 0;
+    imshow(rgb);
+    imwrite(rgb, '../data/memorial/tonemapping1.png');
     pi = 3.1415926;
-    sum2 = 0;
-    for k = 1: 8 
-        sum = 0;
-        sum2 = 0;
-        for i = 1: height
-            for j = 1: width        
-                s = 1 * 1.6 ^ k;
-                alpha1 = 0.35;
-                alpha2 = 0.35 * 1.6;
-                sigma1 = s * alpha1;
-                sigma2 = s * alpha2;
-               
-                R1(i, j, k) = exp( -( i ^ 2 + j ^ 2) / ( sigma1 ^ 2) ) / ( pi * ( sigma1 ^ 2 ) ); 
-                R2(i, j, k) = exp( -( i ^ 2 + j ^ 2) / ( sigma2 ^ 2 ) ) / ( pi * ( sigma2 ^ 2 ) );
-                sum = sum + R1(i, j, k); 
-                sum2 = sum2+R2(i, j, k);
-            end
-        end
-        R1(:,:,k) = R1(:,:,k) / sum;
-        R2(:,:,k) = R2(:,:,k) / sum2;
-    end
-    disp(sum);
-    disp(sum2);
+
     for k = 1: 8
-        fft_lum = fft( lum );
-        fft_R1(:,:,k) = fft( R1(:,:,k));
-        fft_R2(:,:,k) = fft( R2(:,:,k));
-        fft_V1(:,:,k) = fft_lum .* fft_R1(:,:,k);
-        fft_V2(:,:,k) = fft_lum .* fft_R2(:,:,k);
-       
-        V1(:,:,k) = ifft(fft_V1(:,:,k));
-        V2(:,:,k) = ifft(fft_V2(:,:,k));
+        s = 1 * 1.6 ^ k;
+        alpha1 = 0.1;
+        alpha2 = 0.1 * 1.6;
+        sigma1 = s * alpha1;
+        sigma2 = s * alpha2;
+        V1(:,:,k) = 2 * imgaussfilt(lum, sigma1);
+        V2(:,:,k) = 2 * imgaussfilt(lum, sigma2);
+        
     end
-    %imshow(V1(:,:,1))
-    %imshow(V2(:,:,8))
+  
+    a = 0.5;
     for i = 1: height
         for j = 1: width
             for k = 1:8
@@ -86,7 +63,7 @@ function rgb = tonemap_p( hdr )
                 if abs(V(i, j, k)) < epsilon
                     V1_new(i, j) = V1(i, j, k);   
                     sum = sum + 1;
-                    
+                    break;
                 end
             end
         end
@@ -94,14 +71,15 @@ function rgb = tonemap_p( hdr )
     disp(sum);
     for i = 1: height
         for j = 1: width
-            lum_d2(i, j) = lum(i, j) / (1 + V1_new(i, j));
-            
+            lum_d2(i, j) = 1.7*lum(i, j) / (1 + V1_new(i, j));
         end
     end
+
     hsv = rgb2hsv( hdr );
     hsv(:,:,3) = lum_d2;
     rgb = hsv2rgb( hsv);
     imshow(rgb)
-    imwrite(rgb, '../tonemapping2.png')
+    
+    imwrite(rgb, '../data/memorial/tonemapping2.png')
     
 end
