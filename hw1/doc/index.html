@@ -8,7 +8,7 @@
 <body>
   <h1>VFX HW1 Report</h1>
   <h2>B03901009 Shannon Kuo, B03901133 Gary Shih</h2>
-  <h3>HDR Assembling</h3 >
+  <h3>HDR Assembling (Paul E. Devebec)</h3 >
     <li>
       <p>We use Matlab as the programming language to do this project. The Assembling algorithm we implemented is basically what slides and [ 1 ] say. But rather than choosing pixels by hands, we chose those points, which we use to recover response curves, randomly. Then we apply the function in gsolve.m to each channel, and get response curves. At the end, we can use these three response curvers to get the approimate energy on each pixel for each channel.</p>
     </li>
@@ -55,12 +55,18 @@
   </ol>
   <h3>Results</h3>
   <p>We use the sample picture to represent our results of each algorithm.</p>
-  <h4>HDR Assembling</h4>
+  <h4>HDR Assembling (Paul E. Devebec) + Tone Mapping (Bilateral filter)</h4>
   <img src="">
-  <h4>Bilateral Filter</h4>
+  <h4>HDR Assembling (Paul E. Devebec) + Tone Mapping (Photographic tone reproduction)</h4>
+    <p>According to the paper[4], if we set the scale too large, then there will be some black lines on the image. The alpha value of the right image is 0.1, and the alpha valueof the left image is 0.35, which shows that we should choose alpha carefully.<\p>
+    
   <img src="">
-  <h4>Photographic Tone Reproduction algorithm</h4>
   <img src="">
+  <h4>HDR Assembling (Robertson's algorithm) + Tone Mapping (Bilateral filter)</h4>
+  <img src="">
+  <h4>HDR Assembling (Robertson's algorithm) + Tone Mapping (Photographic tone reproduction)</h4>
+  <img src="">
+  
   <h3>References</h3>
   <ol>
     <li>Paul E. Debevec, Jitendra Malik, Recovering High Dynamic Range Radiance Maps from Photographs, SIGGRAPH 1997</li>
