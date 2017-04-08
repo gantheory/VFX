@@ -4,12 +4,12 @@ num_of_photos = 11;
 height = 768;
 width = 512;
 photos = zeros(num_of_photos, height, width, 3);
-N = 10;
+N = 11;
 
 % read files
 disp( 'reading file...' );
 for i = 1 : num_of_photos
-    file_name = ['../data/memorial00' int2str( i + start - 1 ) '.png'];
+    file_name = ['../data/memorial/memorial00' int2str( i + start - 1 ) '.png'];
     tmp = imread( file_name );
     disp( file_name );
     for j = 1 : height
@@ -146,7 +146,6 @@ for y = 1 : height
     result_hdr( y, x, 3 ) = exp( blE( 1, i ) );
   end
 end
-disp( max_E );
 
 % result_hdr = hdrread( '../data/memorial.hdr' );
 % disp( result_hdr );

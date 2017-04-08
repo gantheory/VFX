@@ -1,4 +1,4 @@
-hdr = hdrread('../result.hdr');
+hdr = hdrread('../result_robertson.hdr');
 foo = size( hdr );
 height = foo( 1 );
 width = foo( 2 );
