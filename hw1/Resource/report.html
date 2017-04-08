@@ -41,7 +41,13 @@
           </p>
           </ol>
           <li> Photographic Tone Reproduction  algorithm </li>
-          <p>  The main idea of this algorithm is to make the dark pixels darker, and the bright pixels brighter. This algorithm assumes that areas with different exposure is often bounded by sharp contrast, so, it tries to find the largest surrounding area without sharp contrast. Different key values may lead to different luminance, and if the variance of the Gaussian Filter we chose is too big, than some dark lines will appear in the images. The parameters we used are shown as follows: </p>
+          <p>  The main idea of this algorithm is to make the dark pixels darker, and the bright pixels brighter. This algorithm includes two kinds of operator, one is global operator, and the other one is local operator.
+            <ol>
+              <li>For global operator, high luminances are scaled by 1/L, while low luminances are scaled by 1, so bright pixels can stay in displayable range. Different key values may lead to different luminance.</li> 
+              <li>For local operator, this algorithm assumes that areas with different exposure is often bounded by sharp contrast, so, it tries to find the largest surrounding area without sharp contrast. If the variance of the Gaussian Filter we chose is too big, than some dark lines will appear in the images.</li>
+            </ol>
+          </p>
+            The parameters we used are shown as follows: 
           <ol>
             <li>key value a = 0.7</li>
             <li>phi = 8</li>
@@ -61,8 +67,9 @@
   <img src="./img/Photographic + Paul1.png">
   <h4>HDR Assembling (Paul E. Devebec) + Tone Mapping (Local Photographic tone reproduction)</h4>
   <img src="./img/Photographic + Paul2.png">
-    <p>According to the paper[4], if we set the scale too large, then there will be some black lines on the image. The alpha value of the right image is 0.1, and the alpha valueof the left image is 0.35, which shows that we should choose alpha carefully.</p>
-    
+  <img src="./img/Photographic + Paul black line.png">
+    <p>According to the paper[4], if we set the scale too large, then there will be some black lines on the image. The alpha value of the first image is 0.1, and the alpha valueof the second image is 0.35, which shows that we should choose alpha carefully.</p>
+    <p>If we compare two operators of Photographic tone reproduction, we can find that for local operator, details inside the dark are clearer than global operator.
   <h4>HDR Assembling (Robertson's algorithm) + Tone Mapping (Bilateral filter)</h4>
   <img src="./img/Bilateral + Robertson.png">
   <h4>HDR Assembling (Robertson's algorithm) + Tone Mapping (Global Photographic tone reproduction)</h4>
