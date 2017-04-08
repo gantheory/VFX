@@ -1,9 +1,9 @@
 % params
-start = 61;
-num_of_photos = 16;
+start = 86;
+num_of_photos = 12;
 
 iteration = 7;
-file_name = ['../data/memorial/memorial0061.png'];
+file_name = ['../data/3/DSC04886.JPG'];
 ref = imread(file_name);
 img_size = size(ref);
 height = img_size(1);
@@ -11,10 +11,10 @@ width = img_size(2);
 photos = zeros(num_of_photos, height, width, 3);
 w = zeros(num_of_photos, height * width, 3);
 t = zeros(1, num_of_photos);
-init_t = 1 / 0.125;
+init_t = 1 / 60;
 for j = 1 : num_of_photos
   t(j) = init_t ;
-  init_t = init_t / 2;
+  init_t = init_t * 2;
 end
 
 % read files
@@ -22,9 +22,9 @@ disp( 'reading file...' );
 for i = 1 : num_of_photos
     disp(i);
     if (i < 10)
-        file_name = ['../data/memorial/memorial00' int2str( i + start - 1 ) '.png'];
+        file_name = ['../data/3/DSC04886' int2str( i + start - 1 ) '.JPG'];
     else 
-        file_name = ['../data/memorial/memorial00' int2str( i + start - 1 ) '.png'];
+        file_name = ['../data/3/DSC)4886' int2str( i + start - 1 ) '.JPG'];
     end
     
     tmp = imread( file_name );
@@ -119,8 +119,8 @@ for i = 1: height
         end
     end
 end
-hdrwrite( result_hdr, '../data/memorial/result_2.hdr')
+hdrwrite( result_hdr, '../data/3/3_2.hdr')
 result_png = tonemap( result_hdr );
-imwrite( result_png, '../data/memorial/result_2.png' );
+imwrite( result_png, '../data/3/3_2.png' );
 
 
