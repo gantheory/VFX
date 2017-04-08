@@ -1,15 +1,15 @@
 % params
-start = 63;
-num_of_photos = 11;
-height = 768;
-width = 512;
+start = 86;
+num_of_photos = 12;
+height = 4000;
+width = 6000;
 photos = zeros(num_of_photos, height, width, 3);
 N = 11;
 
 % read files
 disp( 'reading file...' );
 for i = 1 : num_of_photos
-    file_name = ['../data/memorial/memorial00' int2str( i + start - 1 ) '.png'];
+    file_name = ['../input_image/DSC048' int2str( i + start - 1 ) '.JPG'];
     tmp = imread( file_name );
     disp( file_name );
     for j = 1 : height
@@ -52,10 +52,10 @@ for j = 1 : num_of_photos
   end
 end
 disp( 'B...' );
-init_t = 1 / 0.125;
+init_t = 1 / 60;
 for j = 1 : num_of_photos
   B( j ) = log( init_t );
-  init_t = init_t / 2;
+  init_t = init_t * 2;
 end
 disp( 'w...' );
 for z = 0 : 127
@@ -150,7 +150,7 @@ end
 % result_hdr = hdrread( '../data/memorial.hdr' );
 % disp( result_hdr );
 
-hdrwrite( result_hdr, '../result.hdr' );
+hdrwrite( result_hdr, '../result/artifact.hdr' );
 
 result_png = tonemap( result_hdr );
-imwrite( result_png, '../result.png' );
+imwrite( result_png, '../artifact.png' );
