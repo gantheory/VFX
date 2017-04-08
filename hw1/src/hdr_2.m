@@ -1,6 +1,6 @@
 % params
 start = 86;
-num_of_photos = 12;
+num_of_photos = 1;
 
 iteration = 7;
 file_name = ['../data/3/DSC04886.JPG'];
@@ -22,9 +22,9 @@ disp( 'reading file...' );
 for i = 1 : num_of_photos
     disp(i);
     if (i < 10)
-        file_name = ['../data/3/DSC04886' int2str( i + start - 1 ) '.JPG'];
+        file_name = ['../data/3/DSC048' int2str( i + start - 1 ) '.JPG'];
     else 
-        file_name = ['../data/3/DSC)4886' int2str( i + start - 1 ) '.JPG'];
+        file_name = ['../data/3/DSC)48' int2str( i + start - 1 ) '.JPG'];
     end
     
     tmp = imread( file_name );
