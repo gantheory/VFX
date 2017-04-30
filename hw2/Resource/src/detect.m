@@ -72,19 +72,24 @@ function y = detect()
   end
 
   disp( 'filter some R by the threshold and nonmax suppresion' );
+  r = 1;
   for i = 1 : END
     for h = 2 : height - 1
       for w = 2 : width - 1
-        if R( i, h, w ) > 0.005 * R_max && ...
-          R( i, h, w ) > R( i, h - 1, w ) && ...
-          R( i, h, w ) > R( i, h - 1, w + 1 ) && ...
-          R( i, h, w ) > R( i, h, w + 1 ) && ...
-          R( i, h, w ) > R( i, h + 1, w + 1 ) && ...
-          R( i, h, w ) > R( i, h + 1, w ) && ...
-          R( i, h, w ) > R( i, h + 1, w - 1 ) && ...
-          R( i, h, w ) > R( i, h, w - 1 ) && ...
-          R( i, h, w ) > R( i, h -1, w - 1 )
-          result( i, h, w ) = 255;
+        if R( i, h, w ) > 0.003 * R_max
+          flag = 1;
+          for j = h - r : h + r
+            for k = w - r : w + r
+              if j == h && k == w, continue; end
+              if j < 1 || j > height || k < 1 || k > width, continue; end
+              if R( i, h, w ) < R( i, j, k )
+                flag = 0;
+                break;
+              end
+            end
+            if flag == 0, break; end
+          end
+          if flag == 1, result( i, h, w ) = 255; end
         end
       end
     end
