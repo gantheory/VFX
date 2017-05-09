@@ -97,6 +97,27 @@ function y = detect()
 
   for i = 1 : END
     imwrite( reshape( result( i, : , : ), [ height, width ] ),...
-    [ '../feature_img/' int2str(i) '.gif' ] );
+    [ '../feature_img/' int2str(i) '.jpg' ] );
+  end
+
+  r = 1;
+  for i = 1 : END
+    file_name = [ '../input_image/' int2str(i) '.JPG' ];
+    img = imread( file_name );
+    for h = 1 : height
+      for w = 1 : width
+        if result( i, h, w ) == 255
+          for j = h - r : h + r
+            for k = w - r : w + r
+              if j < 1 || j > height || k < 1 || k > width, continue; end
+              img( j, k, 1 ) = 255;
+              img( j, k, 2 ) = 0;
+              img( j, k, 3 ) = 0;
+            end
+          end
+        end
+      end
+    end
+    imwrite( img, ['../simple_detect_img/' int2str(i) '.jpg'] );
   end
 end
