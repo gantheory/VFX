@@ -1,15 +1,15 @@
 function y = warp()
-  END = 35;
-  file_name = [ '../input_image/1.JPG' ];
+  END = 18;
+  file_name = [ '../input_image2/1.jpg' ];
   ref = imread( file_name );
   img_size = size( ref );
   height = img_size( 1 );
   width = img_size( 2 );
   photos = zeros( END, height, width, 3 );
 
-  pana = []
   for i = 1 : END
-    file_name = [ '../input_image/' int2str(i) '.JPG' ];
+    numOfImage = i;
+    file_name = [ '../input_image2/' int2str(numOfImage) '.jpg' ];
     img = imread( file_name );
     tmp = img;
     for h = 1 : height
@@ -20,7 +20,7 @@ function y = warp()
       end
     end
 
-    f = 400.0;
+    f = 600.0;
     for h = 1 : height
       for w = 1 : width
         x = round( h - height / 2 );
@@ -38,8 +38,35 @@ function y = warp()
       end
     end
 
-    imwrite( img, ['../warping_img/' int2str(i) '.jpg'] );
-    pana = cat( 2, pana, img );
+    imwrite( img, ['../warping/' int2str(i) '.jpg'] );
+
+    inputFile = fopen( [ '../msop/' int2str(i) '.txt' ], 'r' );
+    inputData = fscanf( inputFile, '%f' );
+    inputData = reshape( inputData, 66, [] );
+    outputFile = fopen( [ '../warping/' int2str(i) '.txt' ], 'w' );
+    tmp = size( inputData );
+    sz = tmp( 2 );
+    for i = 1 : sz
+      h = inputData( 1, i );
+      w = inputData( 2, i );
+      x = round( h - height / 2 );
+      y = round( w - width / 2 );
+
+      new_x = f * x / sqrt( y^2 + f^2 );
+      new_y = f * atan( y / f );
+
+      new_x = round( new_x + height / 2 );
+      new_y = round( new_y + width / 2 );
+
+      fprintf( outputFile, '%d ', new_x );
+      fprintf( outputFile, '%d ', new_y );
+
+      for j = 3 : 66
+        fprintf( outputFile, '%d ', inputData( j, i ) );
+      end
+      fprintf( outputFile, '\n' );
+    end
+    fclose( outputFile );
+    fclose( inputFile );
   end
-  % imwrite( pana, './pana.jpg' );
 end

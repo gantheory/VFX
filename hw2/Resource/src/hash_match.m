@@ -1,23 +1,21 @@
 function y = hash_match()
-  END = 2;
+  END = 18;
   file_name = [ '../input_image2/1.jpg' ];
   ref = imread( file_name );
   ori_img_size = size( ref );
   ori_height = ori_img_size( 1 );
   ori_width = ori_img_size( 2 );
 
-  pana = ref;
+  for numOfImage = 1 : END - 1
+    prv = numOfImage;
+    nxt = numOfImage + 1;
 
-  for numOfImage = 2 : END
-    prv = numOfImage - 1;
-    nxt = numOfImage;
-
-    featrueFile = fopen(['../msop/' int2str(prv) '.txt'],'r');
-    prvData = fscanf( featrueFile, '%f' );
+    featureFile = fopen(['../warping/' int2str(prv) '.txt'],'r');
+    prvData = fscanf( featureFile, '%f' );
     prvData = reshape( prvData, 66, [] );
 
-    featrueFile = fopen(['../msop/' int2str(nxt) '.txt'],'r');
-    nxtData = fscanf( featrueFile, '%f' );
+    featureFile = fopen(['../warping/' int2str(nxt) '.txt'],'r');
+    nxtData = fscanf( featureFile, '%f' );
     nxtData = reshape( nxtData, 66, [] );
 
     prvBins = cell( 10, 10, 10 );
@@ -35,6 +33,15 @@ function y = hash_match()
     prvSz = tmp( 2 );
     tmp =size( nxtData );
     nxtSz = tmp( 2 );
+
+    for i = 1 : prvSz
+      prvData( 1, i ) = int32( prvData( 1, i ) );
+      prvData( 2, i ) = int32( prvData( 2, i ) );
+    end
+    for i = 1 : nxtSz
+      nxtData( 1, i ) = int32( nxtData( 1, i ) );
+      nxtData( 2, i ) = int32( nxtData( 2, i ) );
+    end
 
     mx = zeros( 1, 3 );
     mn = zeros( 1, 3 );
@@ -173,7 +180,8 @@ function y = hash_match()
             end
             if bestP ~= nowP, continue; end
 
-            if ( first ~= -1 && second == -1 ) || first / second <= 0.65
+            if ( first ~= -1 && second == -1 ) || first / second <= 0.65 ...
+                || first == second
               if abs( prvData( 1, nowP ) - nxtData( 1, bestN ) ) > 10, continue; end
               num = num + 1;
               if prvPair == 0
@@ -191,11 +199,19 @@ function y = hash_match()
 
     disp(['feature matched points: ' int2str( num )]);
 
-    img1 = imread( ['../input_image2/' int2str(prv) '.jpg'] );
-    img2 = imread( ['../input_image2/' int2str(nxt) '.jpg'] );
-    figure; ax = axes;
-    showMatchedFeatures( img1, img2, prvPair, nxtPair, 'montage','Parent',ax);
+    img1 = imread( ['../warping/' int2str(prv) '.jpg'] );
+    img2 = imread( ['../warping/' int2str(nxt) '.jpg'] );
+    %figure; ax = axes;
+    %showMatchedFeatures( img1, img2, prvPair, nxtPair, 'montage','Parent',ax);
 
+    pairFile = fopen(['../match_pair/' int2str(prv) '.txt'], 'w');
+    for i = 1 : num
+      fprintf( pairFile, '%d ', prvPair( i, 2 ) );
+      fprintf( pairFile, '%d ', prvPair( i, 1 ) );
+      fprintf( pairFile, '%d ', nxtPair( i, 2 ) );
+      fprintf( pairFile, '%d\n', nxtPair( i, 1 ) );
+    end
+    fclose( pairFile );
 
   end
 end

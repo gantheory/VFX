@@ -1,5 +1,5 @@
 function y = msop()
-  END = 2;
+  END = 18;
   file_name = [ '../input_image2/1.jpg' ];
   ref = imread( file_name );
   ori_img_size = size( ref );
@@ -125,7 +125,7 @@ function y = msop()
                 end
               end
               finalFeatureWindow = transpose( H ) * finalFeatureWindow * H;
-              feature_file = fopen( ['../msop/' int2str(numOfImage) '.txt'], 'a' );
+              feature_file = fopen( ['../msop/' int2str( numOfImage ) '.txt'], 'a' );
               fprintf( feature_file, '%d ', h * scale );
               fprintf( feature_file, '%d ', w * scale );
               for i = 1 : 8
@@ -176,6 +176,6 @@ function y = msop()
     end
     disp( [ 'points: ' int2str( num ) ] );
     disp( size( img ) );
-    imwrite( img, ['../msop/' int2str(numOfImage) '.jpg'] );
+    imwrite( img, ['../msop/' int2str( numOfImage ) '.jpg'] );
   end
 end
