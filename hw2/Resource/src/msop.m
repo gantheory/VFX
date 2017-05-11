@@ -1,6 +1,6 @@
 function y = msop()
-  END = 35;
-  file_name = [ '../input_image/1.JPG' ];
+  END = 2;
+  file_name = [ '../input_image2/1.jpg' ];
   ref = imread( file_name );
   ori_img_size = size( ref );
   ori_height = ori_img_size( 1 );
@@ -19,7 +19,7 @@ function y = msop()
           0    0    0    0    0    0  rs2 -rs2;];
 
   for numOfImage = 1 : END
-    file_name = [ '../input_image/' int2str(numOfImage) '.JPG' ];
+    file_name = [ '../input_image2/' int2str(numOfImage) '.jpg' ];
     disp( file_name );
     img = imread( file_name );
     photo = rgb2gray( img );
@@ -53,7 +53,8 @@ function y = msop()
       end
 
       blurredImg = imgaussfilt( subSample, 4.5 );
-      [ gMag, gDir ] = imgradient( blurredImg );
+      [ Gx, Gy] = imgradientxy( blurredImg );
+      [ gMag, gDir ] = imgradient( Gx, Gy );
 
       r = 6;
       count_points = 1;
@@ -65,6 +66,7 @@ function y = msop()
           if R( h, w ) >= 10.0
             flag = 1;
             for i = h - r : h + r
+              if flag == 0, break; end
               for j = w - r : w + r
                 if i == h && j == w, continue; end
                 if i < 1 || i > height || j < 1 || j > width, continue; end
@@ -73,7 +75,17 @@ function y = msop()
                   break;
                 end
               end
+            end
+            for i = h - r * scale : h + r * scale
               if flag == 0, break; end
+              for j = w - r * scale : w + r * scale
+                if i == h && j == w, continue; end
+                if i < 1 || i > ori_height || j < 1 || j > ori_width, continue; end
+                if img( i, j, 1 ) == 255
+                  flag = 0;
+                  break;
+                end
+              end
             end
             % find if there exists a 40 * 40 window
             tmpFeatureWindow = zeros( 40, 40 );
@@ -114,8 +126,8 @@ function y = msop()
               end
               finalFeatureWindow = transpose( H ) * finalFeatureWindow * H;
               feature_file = fopen( ['../msop/' int2str(numOfImage) '.txt'], 'a' );
-              fprintf( feature_file, '%d ', h );
-              fprintf( feature_file, '%d ', w );
+              fprintf( feature_file, '%d ', h * scale );
+              fprintf( feature_file, '%d ', w * scale );
               for i = 1 : 8
                 for j = 1 : 8
                   fprintf( feature_file, '%f ', finalFeatureWindow( i, j ) );
