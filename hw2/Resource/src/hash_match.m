@@ -1,6 +1,6 @@
 function y = hash_match()
-  END = 18;
-  file_name = [ '../input_image2/1.jpg' ];
+  END = 17;
+  file_name = [ '../input_image/1.jpg' ];
   ref = imread( file_name );
   ori_img_size = size( ref );
   ori_height = ori_img_size( 1 );
@@ -180,7 +180,7 @@ function y = hash_match()
             end
             if bestP ~= nowP, continue; end
 
-            if ( first ~= -1 && second == -1 ) || first / second <= 0.65 ...
+            if ( first ~= -1 && second == -1 ) || (( first / second ) <= 0.65) ...
                 || first == second
               if abs( prvData( 1, nowP ) - nxtData( 1, bestN ) ) > 10, continue; end
               num = num + 1;
@@ -201,8 +201,8 @@ function y = hash_match()
 
     img1 = imread( ['../warping/' int2str(prv) '.jpg'] );
     img2 = imread( ['../warping/' int2str(nxt) '.jpg'] );
-    %figure; ax = axes;
-    %showMatchedFeatures( img1, img2, prvPair, nxtPair, 'montage','Parent',ax);
+    figure; ax = axes;
+    showMatchedFeatures( img1, img2, prvPair, nxtPair, 'montage','Parent',ax);
 
     pairFile = fopen(['../match_pair/' int2str(prv) '.txt'], 'w');
     for i = 1 : num

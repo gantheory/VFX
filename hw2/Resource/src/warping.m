@@ -1,6 +1,6 @@
 function y = warp()
-  END = 18;
-  file_name = [ '../input_image2/1.jpg' ];
+  END = 17;
+  file_name = [ '../input_image/1.jpg' ];
   ref = imread( file_name );
   img_size = size( ref );
   height = img_size( 1 );
@@ -9,7 +9,7 @@ function y = warp()
 
   for i = 1 : END
     numOfImage = i;
-    file_name = [ '../input_image2/' int2str(numOfImage) '.jpg' ];
+    file_name = [ '../input_image/' int2str(numOfImage) '.jpg' ];
     img = imread( file_name );
     tmp = img;
     for h = 1 : height
