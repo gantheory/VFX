@@ -31,6 +31,11 @@ Alignment:
     directory. Note that you should create a directory named offset/. And it
     will output X and Y offsets for each pair of images.
 
+Blending:
+  blend.m:
+  1) linear_blending
+  2) multi-band blending
+
 Recognizing Panoramas:
   If you want to do recognizing panorama, execute the following files in the
   order. Your images for recognizing should be put under the directory

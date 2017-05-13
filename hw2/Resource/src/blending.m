@@ -8,13 +8,13 @@ function y = linear_blending()
   disp(height);
   disp(width);
   off_prev = [0 0];
-  
+
   top = 0;
   bottom = 0;
   top_c = 0;
   bottom_c = 0;
   for i = 2 : END
-    
+
     file_name1 = [ '../warping/' int2str(i-1) '.jpg' ];
     img1 = imread( file_name1 );
     file_name2 = [ '../warping/' int2str(i) '.jpg' ];
@@ -24,7 +24,7 @@ function y = linear_blending()
     formatSpec = '%d';
     off = fscanf(fileID, formatSpec);
     off(2) = width - off(2);
- 
+
     if (off(1) < 0)
       img1 = [img1(:, :, :); zeros(-off(1), width, 3)];
       img2 = [zeros(-off(1), width, 3); img2(:, :, :)];
@@ -40,7 +40,7 @@ function y = linear_blending()
     overlap2 = [img2(:, 1 + corr: off(2), :) ];
     new = linear(overlap1, overlap2);
     %new = multiband(overlap1, overlap2);
-    
+
     if i == 2
       para = [ img1(:, 1: width - off(2), :), new ];
       off_prev = off;
@@ -52,7 +52,7 @@ function y = linear_blending()
       if (bottom < 0)
         bottom = 0;
       end
-     
+
     else
       w = size(para);
       w = w(2);
@@ -60,15 +60,15 @@ function y = linear_blending()
       c = size(concat);
       if off_prev(1) > 0
         bottom_c = bottom_c + off_prev(1);
-      else 
+      else
         top_c = top_c + off_prev(1);
       end
       if off(1) > 0
         top_c = top_c + off(1);
-      else 
+      else
         bottom_c = bottom_c + off(1);
       end
-      
+
       if top_c < 0
         concat = [zeros(abs(top_c), c(2), 3); concat];
       else
@@ -79,7 +79,7 @@ function y = linear_blending()
       else
         bottom_c = 0;
       end
-      
+
       top = top + off(1);
       bottom = bottom + off(1);
       if top > 0
@@ -97,8 +97,7 @@ function y = linear_blending()
   end
   figure
   imshow( para );
- % imwrite( para, '../input_image3/para_mul.jpg' );
-  crop( para);
+  crop( para );
 end
 
 function new = linear(overlap1, overlap2)
@@ -123,7 +122,7 @@ function new = linear(overlap1, overlap2)
         end
       end
       if black_1 == 1 && j-1 < ending
-        ending = j-1; 
+        ending = j-1;
       elseif black_2 == 1 && j+1 > start
         start = j+1;
       end
@@ -137,11 +136,11 @@ function new = linear(overlap1, overlap2)
       elseif j > ending
         w1(j) = 0;
         w2(j) = 1;
-      else 
+      else
         w1(j) = 1 - (j-start) / (ending-start);
         w2(j) = (j-start) / (ending-start);
       end
-      
+
       new(:,j,1) = w1(j) * overlap1(:, j, 1) + w2(j) * overlap2(:, j, 1);
       new(:,j,2) = w1(j) * overlap1(:, j, 2) + w2(j) * overlap2(:, j, 2);
       new(:,j,3) = w1(j) * overlap1(:, j, 3) + w2(j) * overlap2(:, j, 3);
@@ -173,15 +172,15 @@ function new = multiband(overlap1, overlap2)
         end
       end
       if black_1 == 1 && j-1 < ending
-        ending = j-1; 
+        ending = j-1;
       elseif black_2 == 1 && j+1 > start
         start = j+1;
       end
     end
     start = start + 20;
     ending = ending - 20;
-    for j = 1: sizeOver(2) 
-      if j < start  
+    for j = 1: sizeOver(2)
+      if j < start
         overlap2(:, j, :) = overlap1(:, j, :);
       elseif j > ending
         overlap1(:, j, :) = overlap2(:, j, :);
@@ -212,19 +211,7 @@ function new = multiband(overlap1, overlap2)
       lap{2, i} = double(g{2, i}) - double(expandG2);
       a = g{1, i};
       temp = lap{1,i};
-%       for j = 1: sizeG(1)
-%         for k = 1: sizeG(2)
-%           for m = 1: 3
-%             if a(j, k, m) < expandG1(j, k, m)
-%               disp('neg');
-%               disp(a(j, k, m));
-%               disp(expandG1(j, k, m));
-%               disp(double(a(j, k, m))-double(expandG1(j, k, m)));
-%               disp(temp(j, k, m));
-%             end
-%           end
-%         end
-%       end
+
     end
     lap{1, layer + 1} = g{1, layer + 1};
     lap{2, layer + 1} = g{2, layer + 1};
@@ -238,7 +225,7 @@ function new = multiband(overlap1, overlap2)
       end
       sizeG = size(g{1, i});
       temp = newLap{1, i};
-      
+
       for j = 1: sizeG(2)
         if j < start
           w1(j) = 1;
@@ -246,21 +233,21 @@ function new = multiband(overlap1, overlap2)
         elseif j > ending
           w1(j) = 0;
           w2(j) = 1;
-        else 
+        else
           w1(j) = 1 - (j-start) / (ending-start);
           w2(j) = (j-start) / (ending-start);
         end
-        
+
         temp(:,j,1) = w1(j) * a(:, j, 1) + w2(j) * b(:, j, 1);
         temp(:,j,2) = w1(j) * a(:, j, 2) + w2(j) * b(:, j, 2);
         temp(:,j,3) = w1(j) * a(:, j, 3) + w2(j) * b(:, j, 3);
       end
       newLap{1, i} = temp;
-      
+
     end
     for i = layer: -1: 1
       sizeLap = size(newLap{1, i});
-      if i == layer       
+      if i == layer
         temp1 = imresize(newLap{1, i+1}, [sizeLap(1), sizeLap(2)]);
       else
         temp1 = imresize(newG{1, i+1}, [sizeLap(1), sizeLap(2)]);
